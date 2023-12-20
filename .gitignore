@@ -1,0 +1,13 @@
+__pycache__
+.vscode
+build
+
+# Latex additional file
+*.aux
+*.fdb_latexmk
+*.log
+*.out
+*.synctex.gz
+*.fls
+
+*.pdf

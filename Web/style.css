@@ -1,0 +1,29 @@
+body{
+    background-color: dimgray;
+    color: beige;
+    font-size: 21px;
+    text-align: center;
+}
+
+#myCanvas{
+    border: 1px solid beige;
+}
+
+#redraw{
+    background: gray;
+    width: 120px;
+    height: 40px
+}
+
+#redraw:hover{
+    background: beige;
+}
+
+.slider{
+    width: 500px;
+}
+
+input[type=number]{
+    border: 1px solid beige;
+    border-radius: 5px;
+}
