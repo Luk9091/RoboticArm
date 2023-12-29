@@ -34,7 +34,7 @@ function measureDistance(startPoint, endPoint){
 }
 
 
-scale = 2.5
+scale = 3
 thickness = 10
 
 
@@ -164,6 +164,8 @@ class CrossBar{
         this.Angle = 0
         this.Angle2= 90
 
+        this.bar = measureDistance(baseArm.getEndPosition, baseArm.getStartPosition);
+
         this.position();
     }
 
@@ -183,8 +185,8 @@ class CrossBar{
     position(){
         this.x1 = this.x0 + this.width*Math.cos(this.angle);
         this.y1 = this.y0 + this.width*Math.sin(this.angle);
-        this.x2 = this.x1 + 200*Math.sin(this.angle2);
-        this.y2 = this.y1 + 200*Math.cos(this.angle2);
+        this.x2 = this.x1 + this.bar*Math.sin(this.angle2);
+        this.y2 = this.y1 + this.bar*Math.cos(this.angle2);
     }
 
     draw(){
