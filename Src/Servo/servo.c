@@ -17,6 +17,8 @@ void Servo_init(Servo_t *servo){
     // static uint PWM_STATE = 0;
     static uint ADC_STATE = 0;
 
+    if (servo->step == 0)
+        servo->step = 5;
 
     // PWM INIT
     gpio_set_function(servo->GPIO, GPIO_FUNC_PWM);
@@ -33,6 +35,7 @@ void Servo_init(Servo_t *servo){
         adc_gpio_init(servo->ADC_PIN);
     }
 
+    servo->current_angle = Servo_readAngle(servo);
 }
 
 
@@ -40,13 +43,6 @@ void Servo_setAngle(Servo_t *servo, uint angle){
     uint16_t level = LEVEL_MIN + angle * ((LEVEL_MAX - LEVEL_MIN) / 180);
 
     pwm_set_gpio_level(servo->GPIO, level);
-
-    // sleep_ms(20);
-    // read = Servo_readAngle(servo);
-    // if(read > angle + 5 || read < angle - 5){
-        // pwm_set_enabled(pwm_gpio_to_slice_num(servo->GPIO), false);
-    //     printf("Servo angle error %i", servo->GPIO);
-    // }
 }
 
 
@@ -61,3 +57,8 @@ int Servo_readAngle(Servo_t *servo){
 }
 
 
+void Servo_goto(Servo_t *servo){
+    // if (servo->current_angle != servo.angle){
+        
+    // }
+}

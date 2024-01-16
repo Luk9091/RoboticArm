@@ -17,6 +17,9 @@ typedef struct SERVO {
     uint GPIO;
     uint ADC_PIN;
     bool flipRead;
+    int angle;
+    int current_angle;
+    uint step;
     // int min;
     // int max;
 } Servo_t;
@@ -30,6 +33,8 @@ void Servo_init(Servo_t *servo);
 
 void Servo_setAngle(Servo_t *servo, uint angle);
 int Servo_readAngle(Servo_t *servo);
+
+void Servo_goto(Servo_t *servo);
 
 
 #endif
