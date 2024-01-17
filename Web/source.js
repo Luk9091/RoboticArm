@@ -18,8 +18,7 @@ const y_position = document.getElementById("y_pos");
 
 const reload_button = document.getElementById("reload");
 
-// const interval = setInterval(reload, 200);
-
+const interval = setInterval(reload, 200);
 
 function toRadian(angle){
     return(angle/360*2*Math.PI)
@@ -346,28 +345,27 @@ function setXY(){
     y_position.value = Math.round(-(arm.getEndPosition.y - baseArm.getStartPosition.y)/scale, 2);
 }
 
-
 window.onload = function(){
     changeVal_arm(parseInt(armValue.value));
-    changeVal_arm(parseInt(baseArmValue.value));
+    changeVal_baseArm(parseInt(baseArmValue.value));
     hand.Angle  = parseInt(handValue.value);
-    handSlider  = handValue.value;
+    handSlider.value  = handValue.value;
     baseAngle   = parseInt(baseValue.value);
-    baseSlider  = baseArmValue.value;
+    baseSlider.value  = baseArmValue.value;
 
     draw();
     setXY();
     timer = timer_limit+1;
 }
 
-var timer = 0;
-const timer_limit = 4;
+let timer = 0;
+const timer_limit = 10;
 function reload(){
     timer = timer + 1;
 
     if(timer == timer_limit){
         baseAngle = baseValue.value
-        window.location.href = "/cgi?" + arm.Angle + "," + baseArm.Angle + "," + baseAngle + "," + hand.Angle;
+        window.location.href = "/cgi?" + arm.Angle + "&" + baseArm.Angle + "&" + baseAngle + "&" + hand.Angle;
     }
 }
 
@@ -379,7 +377,6 @@ function changeVal_arm(value){
     
     armSlider.value = value;
     armValue.value = value;
-    
     draw();
 }
 
@@ -412,7 +409,7 @@ armSlider.oninput = function(){
     setXY();
 }
 armValue.oninput = function(){
-    changeVal_arm(this.value)
+    changeVal_arm(this.value);
     setXY();
 }
 
@@ -421,7 +418,7 @@ baseArmSlider.oninput = function(){
     setXY();
 }
 baseArmValue.oninput = function(){
-    changeVal_baseArm(this.value)
+    changeVal_baseArm(this.value);
     setXY();
 }
 
@@ -441,11 +438,13 @@ handValue.oninput = function(){
 baseSlider.oninput = function(){
     baseAngle = parseInt(this.value);
     baseValue.value = this.value;
+    timer = 0;
 }
 
 baseValue.oninput = function(){
     baseAngle = parseInt(this.value);
     baseSlider.value = this.value;
+    timer = 0;
 }
 
 x_position.oninput = function(){
@@ -456,7 +455,6 @@ x_position.oninput = function(){
         angle = toDegree(Math.acos((value-offset)/80));
         changeVal_baseArm(angle);
 
-        // draw();
         y_position.value =-Math.round((arm.getEndPosition.y-baseArm.getStartPosition.y)/scale, 2);
     } else {
         this.value = Math.round(Math.sqrt(23104-y2), 2)
