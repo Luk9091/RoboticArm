@@ -16,6 +16,9 @@ const baseValue = document.getElementById("baseValue");
 const x_position = document.getElementById("x_pos");
 const y_position = document.getElementById("y_pos");
 
+const reload_button = document.getElementById("reload");
+
+// const interval = setInterval(reload, 200);
 
 
 function toRadian(angle){
@@ -23,7 +26,7 @@ function toRadian(angle){
 }
 
 function toDegree(angle){
-    return angle*360/(2*Math.PI);
+    return Math.round(angle*360/(2*Math.PI));
 }
 
 function measureDistance(startPoint, endPoint){
@@ -33,9 +36,9 @@ function measureDistance(startPoint, endPoint){
     return Math.sqrt(distance);
 }
 
-
-scale = 3
-thickness = 10
+let baseAngle = 0;
+const scale = 2.5
+const thickness = 10
 
 
 class BaseArm{
@@ -113,7 +116,7 @@ class Arm{
     }
 
     get Angle(){
-        return -toDegree(this.angle)
+        return -toDegree(this.angle);
     }
 
     position(startPoint, centerPoint){
@@ -141,7 +144,7 @@ class Arm{
             context.lineWidth = 2;
             context.strokeStyle = "white";
             context.stroke();
-
+            baseValue
         context.beginPath();
             context.moveTo(this.x0 - this.thickness*Math.sin(this.angle), this.y0 + this.thickness*Math.cos(this.angle));
             context.arc(this.x0, this.y0, this.thickness, this.angle + toRadian(90), this.angle + toRadian(180+90), false);
@@ -295,7 +298,6 @@ class Axis{
             for (let i = 0; this.x0 + this.step*i < canvas.width; i++) {
                 context.moveTo(this.x0 + this.step*i, canvas.height);
                 context.lineTo(this.x0 + this.step*i, canvas.height-20);
-                // context.lineTo(this.x0 + this.step*i, 0);
                 if(i % 4 == 0){
                     context.textAlign = "center";
                     context.lineTo(this.x0+ this.step*i, canvas.height-40);
@@ -307,7 +309,6 @@ class Axis{
             for (let i = 0; this.y0 > this.step*i; i++){
                 context.moveTo(canvas.width, this.y0-this.step*i);
                 context.lineTo(canvas.width-20, this.y0-this.step*i);
-                // context.lineTo(0, this.y0-this.step*i);
                 if (i % 4 == 0){
                     context.textAlign = "right";
                     context.lineTo(canvas.width-45, this.y0-this.step*i);
@@ -334,7 +335,9 @@ function draw(){
     crossBar.draw();
     arm.draw();
 
-    hand.draw()
+    hand.draw();
+    
+    timer = 0;
 }
 
 
@@ -344,77 +347,85 @@ function setXY(){
 }
 
 
-function setDefault(){
-    arm.Angle       = 0;
-    armValue.value  = arm.Angle;
-    armSlider.value = arm.Angle;
-
-    baseArm.value       = 90;
-    baseArmValue.value  = baseArm.Angle;
-    baseArmSlider.value = baseArm.Angle;
-
-
-    hand.Angle = 30;
-    handSlider.value = hand.Angle;
-    handValue.value =  hand.Angle;
-
-    // base.Angle = 30;
-    baseSlider.value = 90;
-    baseValue.value = 90;
+window.onload = function(){
+    changeVal_arm(parseInt(armValue.value));
+    changeVal_arm(parseInt(baseArmValue.value));
+    hand.Angle  = parseInt(handValue.value);
+    handSlider  = handValue.value;
+    baseAngle   = parseInt(baseValue.value);
+    baseSlider  = baseArmValue.value;
 
     draw();
     setXY();
+    timer = timer_limit+1;
+}
+
+var timer = 0;
+const timer_limit = 4;
+function reload(){
+    timer = timer + 1;
+
+    if(timer == timer_limit){
+        baseAngle = baseValue.value
+        window.location.href = "/cgi?" + arm.Angle + "," + baseArm.Angle + "," + baseAngle + "," + hand.Angle;
+    }
+}
+
+function changeVal_arm(value){
+    value = parseInt(value);
+
+    arm.Angle = value;
+    crossBar.Angle = value;
+    
+    armSlider.value = value;
+    armValue.value = value;
+    
+    draw();
+}
+
+function changeVal_baseArm(value){
+    value = parseInt(value);
+    baseArm.Angle = value;
+    crossBar.Angle2 = value;
+
+    min = value - 135;
+    armSlider.min = min;
+    armValue.min = min;
+
+    max = value - 45;
+    armSlider.max = max;
+    armValue.max = max;
+
+    if (arm.Angle < min){
+        changeVal_arm(min);
+    } else if (arm.Angle > max){
+        changeVal_arm(max);
+    }
+
+    baseArmSlider.value = value;
+    baseArmValue.value = value;
+    draw();
 }
 
 armSlider.oninput = function(){
-    arm.Angle = parseInt(this.value);
-    crossBar.Angle = parseInt(this.value)
-    armValue.value = this.value;
-    draw();
+    changeVal_arm(this.value);
+    setXY();
+}
+armValue.oninput = function(){
+    changeVal_arm(this.value)
     setXY();
 }
 
 baseArmSlider.oninput = function(){
-    baseArm.Angle = parseInt(this.value);
-    crossBar.Angle2 = parseInt(this.value);
-
-    armSlider.min = (parseInt(this.value)-90-45);
-    armValue.min = (parseInt(this.value) -90-45);
-
-    armSlider.max = (parseInt(this.value)-90+45);
-    armValue.max = (parseInt(this.value) -90+45);
-
-
-    baseArmValue.value = this.value;
-    draw();
+    changeVal_baseArm(this.value);
     setXY();
 }
-
-armValue.oninput = function(){
-    arm.Angle = parseInt(this.value);
-    crossBar.Angle = parseInt(this.value)
-    armSlider.value = this.value;
-
-
-    draw();
-    setXY();
-}
-
 baseArmValue.oninput = function(){
-    baseArm.Angle = parseInt(this.value);
-    crossBar.Angle2 = parseInt(this.value);
-
-    armSlider.min = (parseInt(this.value)-90-45);
-    armValue.min = (parseInt(this.value) -90-45);
-
-    armSlider.max = (parseInt(this.value)-90+45);
-    armValue.max = (parseInt(this.value) -90+45);
-
-    baseArmSlider.value = this.value;
-
-    draw();
+    changeVal_baseArm(this.value)
     setXY();
 }
+
+
 
 handSlider.oninput = function(){
     hand.Angle = parseInt(this.value);
@@ -428,43 +439,40 @@ handValue.oninput = function(){
 }
 
 baseSlider.oninput = function(){
-    // base.Angle = parseInt(this.value);
+    baseAngle = parseInt(this.value);
     baseValue.value = this.value;
-    // draw();
 }
+
 baseValue.oninput = function(){
-    // base.Angle = parseInt(this.value);
+    baseAngle = parseInt(this.value);
     baseSlider.value = this.value;
-    // draw();
 }
 
 x_position.oninput = function(){
-    offset = Math.round((arm.getEndPosition.x-baseArm.getEndPosition.x)/scale, 2);
-    // console.log(offset);
-    angle = toDegree(Math.acos((parseInt(this.value)-offset)/80));
-    baseArm.Angle = angle;
-    crossBar.Angle2 = angle;
-    
-    baseArmSlider.value = Math.round(angle, 2);
-    baseArmValue.value  = Math.round(angle, 2);
+    value = parseInt(this.value);
+    y2 = Math.pow(parseInt(y_position.value), 2);
+    if (Math.sqrt(Math.pow(value, 2) + y2) < 152){
+        offset = Math.round((arm.getEndPosition.x-baseArm.getEndPosition.x)/scale, 2);
+        angle = toDegree(Math.acos((value-offset)/80));
+        changeVal_baseArm(angle);
 
-    draw();
-    y_position.value =-Math.round((arm.getEndPosition.y-baseArm.getStartPosition.y)/scale, 2);
+        // draw();
+        y_position.value =-Math.round((arm.getEndPosition.y-baseArm.getStartPosition.y)/scale, 2);
+    } else {
+        this.value = Math.round(Math.sqrt(23104-y2), 2)
+    }
 }
 
 y_position.oninput = function(){
     offset = (baseArm.getStartPosition.y-baseArm.getEndPosition.y)/scale;
-    // console.log(offset);
     angle = toDegree(Math.asin((parseInt(this.value)-offset)/85));
 
-    arm.Angle = angle;
-    crossBar.Angle = angle;
-
-    armSlider.value = Math.round(angle, 2);
-    armValue.value =  Math.round(angle, 2);
-
-    draw();
-    x_position.value = Math.round((arm.getEndPosition.x-baseArm.getStartPosition.x)/scale, 2);
+    if(angle >= armValue.min && angle <= armValue.max){
+        changeVal_arm(angle);
+        x_position.value = Math.round((arm.getEndPosition.x-baseArm.getStartPosition.x)/scale, 2);
+    } else {
+        y_position.value =-Math.round((arm.getEndPosition.y-baseArm.getStartPosition.y)/scale, 2);
+    }
 }
 
 

@@ -7,20 +7,20 @@
     </head>
 
     <body onload="setDefault()">
-        <canvas id="myCanvas" width="800" height="600"></canvas><br/>
+        <canvas id="myCanvas", width="800", height="600"></canvas><br/>
 
             <span style="width: 10px; padding-right: 5px;">Arm:</span>
-                <input type="range",  min="-45", max="45", class="slider", id="armSlider"/>
-                <input type="number", min="-45", max="45", id="armValue"/><br/>
+                <input type="range", class="slider", id="armSlider"/>
+                <input type="number", value="<!--#Arm-->", id="armValue"/><br/>
             <span style="width: 10px; padding-right: 3px;">Base:</span>
                 <input type="range",  min="30", max="120", class="slider", id="baseArmSlider"/>
-                <input type="number", min="30", max="120", id="baseArmValue"/><br/>
+                <input type="number", min="30", max="120", value="<!--#Base-->", id="baseArmValue"/><br/>
             <span style="width: 10px; padding-right: 5px;">Hand</span>
-                <input type="range",  min="0", max="120", class="slider", id="handSlider"/>
-                <input type="number", min="0", max="120", id="handValue"/><br/>
+                <input type="range",  min= "0", max="120", class="slider", id="handSlider"/>
+                <input type="number", min= "0", max="120", value="<!--#Hand-->", id="handValue"/><br/>
             <span style="width: 10px; padding-right: 5px;">Base</span>
-                <input type="range",  min="0", max="180", class="slider", id="baseSlider"/>
-                <input type="number", min="0", max="180", id="baseValue"/><br/>
+                <input type="range",  min= "0", max="180", class="slider", id="baseSlider"/>
+                <input type="number", min= "0", max="180", value="<!--#Rotor-->", id="baseValue"/><br/>
 
             
             <div class="coordinate">
@@ -29,9 +29,10 @@
             </div>
             <div class="coordinate">
                 <span class="coordinate_span">y:</span>
-                    <input type="number", min="0", max="140", id="y_pos">mm
+                    <input type="number", min="-45", max="140", id="y_pos">mm
             </div>
-
+            <br/>
+            <button id="reload">Reload</button>
 
         <script src="source.js"></script>
     </body>
