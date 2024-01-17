@@ -346,12 +346,12 @@ function setXY(){
 }
 
 window.onload = function(){
-    changeVal_arm(parseInt(armValue.value));
     changeVal_baseArm(parseInt(baseArmValue.value));
+    changeVal_arm(parseInt(armValue.value));
     hand.Angle  = parseInt(handValue.value);
     handSlider.value  = handValue.value;
+    baseSlider.value  = baseValue.value;
     baseAngle   = parseInt(baseValue.value);
-    baseSlider.value  = baseArmValue.value;
 
     draw();
     setXY();
