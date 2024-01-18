@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <hardware/clocks.h>
 
+
 // Servo need 50Hz, f_sys = 125HMz
 #define PRESCALER   100
 #define TOP       24999
@@ -16,9 +17,10 @@
 void Servo_init(Servo_t *servo){
     // static uint PWM_STATE = 0;
     static uint ADC_STATE = 0;
+    servo->start = true;
 
     if (servo->step == 0)
-        servo->step = 5;
+        servo->step = 1;
 
     // PWM INIT
     gpio_set_function(servo->GPIO, GPIO_FUNC_PWM);
@@ -33,15 +35,16 @@ void Servo_init(Servo_t *servo){
 
     if (servo->ADC_PIN >= 26 && servo->ADC_PIN <= 28){
         adc_gpio_init(servo->ADC_PIN);
+        servo->current_angle = Servo_readAngle(servo);
+    } else {
+        servo->current_angle = 0;
     }
-
-    servo->current_angle = Servo_readAngle(servo);
 }
 
 
 void Servo_setAngle(Servo_t *servo, uint angle){
     uint16_t level = LEVEL_MIN + angle * ((LEVEL_MAX - LEVEL_MIN) / 180);
-
+    servo->current_angle = angle;
     pwm_set_gpio_level(servo->GPIO, level);
 }
 
@@ -58,7 +61,28 @@ int Servo_readAngle(Servo_t *servo){
 
 
 void Servo_goto(Servo_t *servo){
-    // if (servo->current_angle != servo.angle){
-        
-    // }
+    uint small_step = servo->step;
+
+    if (servo->current_angle != servo->angle){
+        if (abs(servo->angle - servo->current_angle) < servo->step){
+            small_step = abs(servo->angle - servo->current_angle);
+        }
+        if(servo->current_angle > servo->angle){
+            servo->current_angle -= small_step;
+        } else {
+            servo->current_angle += small_step;
+        }
+
+        Servo_setAngle(servo, servo->current_angle);
+    }
+}
+
+void Servo_start(Servo_t *servo){
+    uint slice = pwm_gpio_to_slice_num(servo->GPIO);
+    pwm_set_enabled(slice, true);
+}
+
+void Servo_stop(Servo_t *servo){
+    uint slice = pwm_gpio_to_slice_num(servo->GPIO);
+    pwm_set_enabled(slice, false);
 }
