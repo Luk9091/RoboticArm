@@ -19,6 +19,7 @@ add_executable(${PROJECT_NAME}
     WebSerwer/utilities/utilities.c
     WebSerwer/URL/ssi.c
     WebSerwer/URL/cgi.c
+    Overcurrent/OC.c
 )
 
 # include_directories(I2C)
@@ -27,6 +28,7 @@ include_directories(Servo)
 include_directories(WebSerwer)
 include_directories(WebSerwer/utilities)
 include_directories(WebSerwer/URL)
+include_directories(Overcurrent)
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
@@ -43,6 +45,7 @@ target_link_libraries(${PROJECT_NAME}
     hardware_gpio
     hardware_adc
     hardware_pwm
+    hardware_timer
     # hardware_i2c
 )
 
