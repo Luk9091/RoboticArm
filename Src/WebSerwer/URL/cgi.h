@@ -4,8 +4,14 @@
 #include <pico/cyw43_arch.h>
 #include <lwip/apps/httpd.h>
 #include <pico/stdlib.h>
+#include "servo.h"
 
 
-void cgi_init();
+void cgi_init(
+    Servo_t *arm,
+    Servo_t *base,
+    Servo_t *hand,
+    Servo_t *rotor
+);
 
 #endif

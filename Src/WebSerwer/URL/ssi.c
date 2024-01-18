@@ -1,9 +1,9 @@
 #include "ssi.h"
 
-Servo_t *_arm = NULL;
-Servo_t *_base = NULL;
-Servo_t *_hand = NULL;
-Servo_t *_rotor = NULL;
+Servo_t *ssi_arm = NULL;
+Servo_t *ssi_base = NULL;
+Servo_t *ssi_hand = NULL;
+Servo_t *ssi_rotor = NULL;
 
 const char *ssi_tags[] = {
     "Arm",
@@ -12,6 +12,9 @@ const char *ssi_tags[] = {
     "Rotor"
 };
 
+void ssi_release_message(){
+    
+}
 
 tSSIHandler ssi_handler(int index, char *insert, size_t len){
     tSSIHandler printed;
@@ -19,16 +22,16 @@ tSSIHandler ssi_handler(int index, char *insert, size_t len){
 
     switch(index){
         case 0: {
-            data = _arm->angle;
+            data = 180 - ssi_arm->angle;
         }break;
         case 1: {
-            data = _base->angle;
+            data = 180 - ssi_base->angle;
         }break;
         case 2: {
-            data = _hand->angle;
+            data = ssi_hand->angle;
         }break;
         case 3: {
-            data = _rotor->angle;
+            data = ssi_rotor->angle;
         }break;
     }
     printed = (tSSIHandler)snprintf(insert, len, "%i", data);
@@ -42,10 +45,10 @@ void ssi_init(
     Servo_t *hand,
     Servo_t *rotor
 ){
-    _arm = arm;
-    _base = base;
-    _hand = hand;
-    _rotor = rotor;
+    ssi_arm   = arm;
+    ssi_base  = base;
+    ssi_hand  = hand;
+    ssi_rotor = rotor;
 
 
     http_set_ssi_handler(ssi_handler, ssi_tags, LWIP_ARRAYSIZE(ssi_tags));
