@@ -15,6 +15,7 @@ void ssi_init(
     Servo_t *rotor
 );
 
-void ssi_release_message();
+void ssi_block_message(uint value);
+void ssi_release_message(uint value);
 
 #endif

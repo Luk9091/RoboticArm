@@ -28,11 +28,11 @@ void OC_init(){
 uint set_timer = 0;
 int64_t OC_timer_execute(alarm_id_t id, void *args){
     struct OC_Servo *oc_servo = (struct OC_Servo*)args;
-    set_timer -= oc_servo->num;
     if(OC_check() & oc_servo->num){
         Servo_stop(oc_servo->servo);
-        
+        ssi_block_message(oc_servo->num);
     }
+    set_timer &= ~oc_servo->num;
     free(oc_servo);
     return 0;
 }
@@ -40,9 +40,10 @@ int64_t OC_timer_execute(alarm_id_t id, void *args){
 void OC_run_timer(Servo_t *servo, uint num){
     if (!(set_timer & num)){
         struct OC_Servo *oc_servo = malloc(sizeof(struct OC_Servo));
+        // servo->backUp = servo->current_angle;
         oc_servo->servo = servo;
         oc_servo->num = num;
-        add_alarm_in_ms(5000, OC_timer_execute, oc_servo, false);
-        set_timer += num;
+        add_alarm_in_ms(2000, OC_timer_execute, oc_servo, false);
+        set_timer |= num;
     }
 }

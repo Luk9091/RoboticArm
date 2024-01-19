@@ -28,6 +28,7 @@ typedef struct SERVO {
     int angle;
     int current_angle;
     uint step;
+    int backUp;
     // int min;
     // int max;
 } Servo_t;

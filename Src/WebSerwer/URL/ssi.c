@@ -4,16 +4,22 @@ Servo_t *ssi_arm = NULL;
 Servo_t *ssi_base = NULL;
 Servo_t *ssi_hand = NULL;
 Servo_t *ssi_rotor = NULL;
+uint OC = 0;
 
 const char *ssi_tags[] = {
     "Arm",
     "Base",
     "Hand",
-    "Rotor"
+    "Rotor",
+    "OC"
 };
 
-void ssi_release_message(){
-    
+void ssi_block_message(uint value){
+    OC = OC | value;
+}
+
+void ssi_release_message(uint value){
+    OC = OC & ~value;
 }
 
 tSSIHandler ssi_handler(int index, char *insert, size_t len){
@@ -33,6 +39,9 @@ tSSIHandler ssi_handler(int index, char *insert, size_t len){
         case 3: {
             data = ssi_rotor->angle;
         }break;
+        case 4: {
+            data = OC;
+        } break;
     }
     printed = (tSSIHandler)snprintf(insert, len, "%i", data);
 

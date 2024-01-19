@@ -61,6 +61,8 @@ int Servo_readAngle(Servo_t *servo){
 
 
 void Servo_goto(Servo_t *servo){
+    if (!servo->start) return;
+    
     uint small_step = servo->step;
 
     if (servo->current_angle != servo->angle){
@@ -78,11 +80,14 @@ void Servo_goto(Servo_t *servo){
 }
 
 void Servo_start(Servo_t *servo){
+    servo->start = true;
+    servo->angle = servo->backUp;
     uint slice = pwm_gpio_to_slice_num(servo->GPIO);
     pwm_set_enabled(slice, true);
 }
 
 void Servo_stop(Servo_t *servo){
+    servo->start = false;
     uint slice = pwm_gpio_to_slice_num(servo->GPIO);
     pwm_set_enabled(slice, false);
 }

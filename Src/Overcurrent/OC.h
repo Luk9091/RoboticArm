@@ -7,12 +7,13 @@
 #include <pico/stdio.h>
 #include <hardware/gpio.h>
 #include <hardware/timer.h>
-#include <servo.h>
+#include "servo.h"
+#include "ssi.h"
 
-#define OC_ARM_NUM    1<<1
-#define OC_BASE_NUM   1<<0
-#define OC_ROTOR_NUM  1<<3
-#define OC_HAND_NUM   1<<2
+#define OC_ARM_NUM       2
+#define OC_BASE_NUM      1
+#define OC_ROTOR_NUM     8
+#define OC_HAND_NUM      4
 
 #define OC_ARM_PIN      11
 #define OC_BASE_PIN     10

@@ -5,6 +5,8 @@
 #include <lwip/apps/httpd.h>
 #include <pico/stdlib.h>
 #include "servo.h"
+#include "OC.h"
+#include "ssi.h"
 
 
 void cgi_init(

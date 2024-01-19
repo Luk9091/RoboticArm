@@ -117,13 +117,11 @@ int main(){
         Servo_goto(&hand);
         gpio_put(BLINK_LED, !gpio_get(BLINK_LED));
         sleep_ms(10);
-        
+
         oc_check_value = OC_check();
-        if (oc_check_value){
-            if(oc_check_value & OC_ARM_NUM)   OC_run_timer(&arm, OC_ARM_NUM);
-            if(oc_check_value & OC_BASE_NUM)  OC_run_timer(&base, OC_BASE_NUM);
-            if(oc_check_value & OC_ROTOR_NUM) OC_run_timer(&rotor, OC_ROTOR_NUM);
-        }
+        if(oc_check_value & OC_ARM_NUM)   OC_run_timer(&arm, OC_ARM_NUM); else if (arm.start) arm.backUp = arm.current_angle;
+        if(oc_check_value & OC_BASE_NUM)  OC_run_timer(&base, OC_BASE_NUM); else if (base.start) base.backUp = base.current_angle;
+        if(oc_check_value & OC_ROTOR_NUM) OC_run_timer(&rotor, OC_ROTOR_NUM); else if (rotor.start) rotor.backUp = rotor.current_angle;
     }
 
     return 0;
