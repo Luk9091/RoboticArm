@@ -22,7 +22,7 @@ const send = document.getElementById("Send");
 const armRes = document.getElementById("armRes");
 const baseRes = document.getElementById("baseRes");
 const rotorRes = document.getElementById("rotorRes");
-// const interval = setInterval(reload, 200);
+const interval = setInterval(reload, 200);
 
 function toRadian(angle){
     return(angle/360*2*Math.PI)
@@ -399,11 +399,13 @@ function reload(){
     if(timer == timer_limit){
         baseAngle = rotorValue.value
         window.location.href = "/cgi?" + arm.Angle + "&" + base.Angle + "&" + baseAngle + "&" + hand.Angle;
+    }else if(timer == 3*timer_limit){
+        window.location.href = "/index.shtml";
     }
 }
 
-armRes.onclick = function(){window.location.href   = "/res?1"}
-baseRes.onclick = function(){window.location.href  = "/res?0"}
+armRes.onclick = function(){window.location.href   = "/res?2"}
+baseRes.onclick = function(){window.location.href  = "/res?1"}
 rotorRes.onclick = function(){window.location.href = "/res?8"}
 
 function changeVal_arm(value){

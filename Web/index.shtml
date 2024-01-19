@@ -40,7 +40,7 @@
             </div>
             <br/>
             <button id="Send", style="width: 80px; height: 30px;", class="value">Send</button>
-            <input id="OC", style="display: inline;", value="<!--#OC-->">
+            <input id="OC", style="display: none;", value="<!--#OC-->">
 
         <script src="source.js"></script>
     </body>
