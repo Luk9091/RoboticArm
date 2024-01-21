@@ -11,32 +11,36 @@
 
             <span style="width: 10px; padding-right: 5px;">Arm:</span>
                 <input type="range", class="slider", id="armSlider"/>
-                <input type="number", value="<!--#Arm-->", id="armValue", class="value"/>
+                <input type="number", value="45", id="armValue", class="value"/>
                 <button id="armRes", class="value", style="display: none;">Reset</button>
                 <br/>
             <span style="width: 10px; padding-right: 3px;">Base:</span>
                 <input type="range",  min="30", max="120", class="slider", id="baseSlider"/>
-                <input type="number", min="30", max="120", value="<!--#Base-->", id="baseValue", class="value"/>
+                <input type="number", min="30", max="120", value="90", id="baseValue", class="value"/>
                 <button id="baseRes", class="value", style="display: none;">Reset</button>
                 <br/>
             <span style="width: 10px; padding-right: 5px;">Hand</span>
                 <input type="range",  min= "0", max="120", class="slider", id="handSlider"/>
-                <input type="number", min= "0", max="120", value="<!--#Hand-->", id="handValue", class="value"/>
+                <input type="number", min= "0", max="120", value="20", id="handValue", class="value"/>
                 <br/>
             <span style="width: 10px; padding-right: 5px;">Rotor</span>
                 <input type="range",  min= "0", max="180", class="slider", id="rotorSlider"/>
-                <input type="number", min= "0", max="180", value="<!--#Rotor-->", id="rotorValue", class="value"/>
+                <input type="number", min= "0", max="180", value="90", id="rotorValue", class="value"/>
                 <button id="rotorRes", class="value", style="display: none;">Reset</button>
                 <br/>
 
             
             <div class="coordinate">
                 <span class="coordinate_span">x:</span>
-                    <input type="number", min="0", max="154", id="x_pos", class="value">mm
+                    <input type="number", min="0", max="154", id="x_pos", class="value", readonly>mm
             </div>
             <div class="coordinate">
                 <span class="coordinate_span">y:</span>
-                    <input type="number", min="-45", max="140", id="y_pos", class="value">mm
+                    <input type="number", min="-45", max="140", id="y_pos", class="value", readonly>mm
+            </div>
+            <div class="coordinate">
+                <span class="coordinate_span">z:</span>
+                    <input type="number", min="-154", max="154", id="z_pos", class="value", readonly>mm
             </div>
             <br/>
             <button id="Send", style="width: 80px; height: 30px;", class="value">Send</button>

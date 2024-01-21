@@ -16,13 +16,15 @@ const rotorValue = document.getElementById("rotorValue");
 
 const x_position = document.getElementById("x_pos");
 const y_position = document.getElementById("y_pos");
+const z_position = document.getElementById("z_pos");
 
 const send = document.getElementById("Send");
 
 const armRes = document.getElementById("armRes");
 const baseRes = document.getElementById("baseRes");
 const rotorRes = document.getElementById("rotorRes");
-const interval = setInterval(reload, 200);
+// const interval = setInterval(reload, 200);
+
 
 function toRadian(angle){
     return(angle/360*2*Math.PI)
@@ -32,16 +34,18 @@ function toDegree(angle){
     return Math.round(angle*360/(2*Math.PI));
 }
 
-function measureDistance(startPoint, endPoint){
-    x = Math.pow(endPoint.x - startPoint.x, 2);
-    y = Math.pow(endPoint.y - startPoint.y, 2);
-    distance = x + y;
-    return Math.sqrt(distance);
+function measureDistance(start, end){
+    x = Math.pow(end.x - start.x, 2);
+    y = Math.pow(end.y - start.y, 2);
+    z = Math.pow(end.z - start.z, 2);
+
+    return Math.sqrt(x + y + z);
 }
 
 let baseAngle = 0;
-const scale = 2.5
-const thickness = 10
+const maxLen = 154;
+const scale = 2.5;
+const thickness = 10;
 
 
 class Base{
@@ -65,6 +69,9 @@ class Base{
 
     get Angle(){
         return toDegree(this.angle)-90
+    }
+    get length(){
+        return 80;
     }
 
     position(){
@@ -139,6 +146,10 @@ class Arm{
         return point;
     }
 
+    get length(){
+        return 85;
+    }
+
     draw(){
         context.beginPath();
             context.moveTo(this.x0, this.y0);
@@ -169,8 +180,7 @@ class CrossBar{
         this.height = height
         this.Angle = 0
         this.Angle2= 90
-
-        this.bar = measureDistance(base.getEndPosition, base.getStartPosition);
+        this.bar = 200;
 
         this.position();
     }
@@ -274,7 +284,7 @@ class Hand{
     }
 
     get Angle(){
-        return Math.round(toDegree(this.left.angle), 2);
+        return Math.round(toDegree(this.left.angle));
     }
 
     position(point){
@@ -345,8 +355,13 @@ function draw(){
 
 
 function setXY(){
-    x_position.value = Math.round( (arm.getEndPosition.x - base.getStartPosition.x)/scale, 2);
-    y_position.value = Math.round(-(arm.getEndPosition.y - base.getStartPosition.y)/scale, 2);
+    ax = toRadian(baseValue.value);
+    ay = toRadian(rotorValue.value-90);
+    az = toRadian(armValue.value-45);
+    
+    x_position.value = Math.round((base.length*Math.cos(ax) + arm.length*Math.cos(az))*Math.cos(ay));
+    z_position.value = Math.round(base.length*Math.sin(ax) - arm.length*Math.sin(az));
+    y_position.value = Math.round(maxLen * (Math.sin(ay)*Math.sin(ax + az)) + maxLen);
 }
 
 window.onload = function(){
@@ -466,54 +481,29 @@ baseValue.oninput = function(){
 
 
 handSlider.oninput = function(){
-    hand.Angle = parseInt(this.value);
+    hand.Angle = this.value;
     handValue.value = this.value;
     draw();
 }
 handValue.oninput = function(){
-    hand.Angle = parseInt(this.value);
+    hand.Angle = this.value;
     handSlider.value = this.value;
     draw();
 }
 
 rotorSlider.oninput = function(){
-    baseAngle = parseInt(this.value);
+    baseAngle = this.value;
     rotorValue.value = this.value;
+    setXY();
     timer = 0;
 }
 
 rotorValue.oninput = function(){
-    baseAngle = parseInt(this.value);
+    baseAngle = this.value;
     rotorSlider.value = this.value;
+    setXY();
     timer = 0;
 }
-
-x_position.oninput = function(){
-    value = parseInt(this.value);
-    y2 = Math.pow(parseInt(y_position.value), 2);
-    if (Math.sqrt(Math.pow(value, 2) + y2) < 152){
-        offset = Math.round((arm.getEndPosition.x-base.getEndPosition.x)/scale, 2);
-        angle = toDegree(Math.acos((value-offset)/80));
-        changeVal_base(angle);
-
-        y_position.value =-Math.round((arm.getEndPosition.y-base.getStartPosition.y)/scale, 2);
-    } else {
-        this.value = Math.round(Math.sqrt(23104-y2), 2)
-    }
-}
-
-y_position.oninput = function(){
-    offset = (base.getStartPosition.y-base.getEndPosition.y)/scale;
-    angle = toDegree(Math.asin((parseInt(this.value)-offset)/85));
-
-    if(angle >= armValue.min && angle <= armValue.max){
-        changeVal_arm(angle);
-        x_position.value = Math.round((arm.getEndPosition.x-base.getStartPosition.x)/scale, 2);
-    } else {
-        y_position.value =-Math.round((arm.getEndPosition.y-base.getStartPosition.y)/scale, 2);
-    }
-}
-
 
 const base= new Base(canvas.width * 0.2, canvas.height *  0.8, 80*scale);
 const arm = new Arm(120*scale);
