@@ -12,10 +12,12 @@
             <span style="width: 10px; padding-right: 5px;">Arm:</span>
                 <input type="range", class="slider", id="armSlider"/>
                 <input type="number", value="<!--#Arm-->", id="armValue", class="value"/>
+                <input type="number", value="<!--#Arm-->", id="armValue", class="value"/>
                 <button id="armRes", class="value", style="display: none;">Reset</button>
                 <br/>
             <span style="width: 10px; padding-right: 3px;">Base:</span>
                 <input type="range",  min="30", max="120", class="slider", id="baseSlider"/>
+                <input type="number", min="30", max="120", value="<!--#Base-->", id="baseValue", class="value"/>
                 <input type="number", min="30", max="120", value="<!--#Base-->", id="baseValue", class="value"/>
                 <button id="baseRes", class="value", style="display: none;">Reset</button>
                 <br/>
@@ -25,6 +27,7 @@
                 <br/>
             <span style="width: 10px; padding-right: 5px;">Rotor</span>
                 <input type="range",  min= "0", max="180", class="slider", id="rotorSlider"/>
+                <input type="number", min= "0", max="180", value="<!--#Rotor-->", id="rotorValue", class="value"/>
                 <input type="number", min= "0", max="180", value="<!--#Rotor-->", id="rotorValue", class="value"/>
                 <button id="rotorRes", class="value", style="display: none;">Reset</button>
                 <br/>
