@@ -14,16 +14,12 @@
 #include <hardware/adc.h>
 
 #include "servo.h"
-#include "distance.h"
 
 #include "PASS.h"
 #ifndef SSID
-#define SSID  /*Enter your SSID*/
+#define SSID        // Enter yours SSID
+#define PASS        // Enter yours PASSWORD
 #endif
-#ifndef PASS
-#define PASS /*Enter your PASSWORD*/
-#endif
-
 
 #define BLINK_LED 16
 

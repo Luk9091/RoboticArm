@@ -14,7 +14,7 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
     main.c
     # I2C/i2c.c
-    Distance/distance.c
+    # Distance/distance.c
     Servo/servo.c
     WebSerwer/utilities/utilities.c
     WebSerwer/URL/ssi.c
@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME}
 )
 
 # include_directories(I2C)
-include_directories(Distance)
+# include_directories(Distance)
 include_directories(Servo)
 include_directories(WebSerwer)
 include_directories(WebSerwer/utilities)
