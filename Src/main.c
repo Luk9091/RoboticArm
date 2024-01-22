@@ -23,12 +23,8 @@
 
 #define BLINK_LED 16
 
-Servo_t arm;
-Servo_t base;
-Servo_t rotor;
-Servo_t hand;
 
-void all_servo_Init(){
+void all_servo_Init(Servo_t *arm, Servo_t *base, Servo_t *rotor, Servo_t *hand){
     static bool is_init = false;
     if (is_init){
         printf("Serve are init\n");
@@ -36,28 +32,25 @@ void all_servo_Init(){
     }
     is_init = true;
 
-    arm.GPIO   = SERVO_ARM_PIN;
-    base.GPIO  = SERVO_BASE_PIN;
-    rotor.GPIO = SERVO_ROTOR_PIN;
-    hand.GPIO  = SERVO_HAND_PIN;
+    arm->GPIO   = SERVO_ARM_PIN;
+    base->GPIO  = SERVO_BASE_PIN;
+    rotor->GPIO = SERVO_ROTOR_PIN;
+    hand->GPIO  = SERVO_HAND_PIN;
 
     adc_init();
-    Servo_init(&arm);
-    Servo_init(&base);
-    Servo_init(&rotor);
-    Servo_init(&hand);
+    Servo_init(arm);
+    Servo_init(base);
+    Servo_init(rotor);
+    Servo_init(hand);
 
-    arm.angle = 180-45;
-    base.angle = 90;
-    rotor.angle = 90;
-    hand.angle = 20;
-    
-    // arm.step   = 2;
-    hand.step = 15;
+    arm->angle = 180-45;
+    base->angle = 90;
+    rotor->angle = 90;
+    hand->angle = 45;
 }
 
 
-err_t wifi_init(){
+err_t wifi_init(Servo_t *arm, Servo_t *base, Servo_t *rotor, Servo_t *hand){
     static bool is_init = false;
     if (is_init){
         printf("WiFi module is init\n");
@@ -79,8 +72,8 @@ err_t wifi_init(){
     httpd_init();
     
 
-    ssi_init(&arm, &base, &hand, &rotor);
-    cgi_init(&arm, &base, &hand, &rotor);
+    ssi_init(arm, base, hand, rotor);
+    cgi_init(arm, base, hand, rotor);
     printf("Open http server\n");
     return ERR_OK;
 }
@@ -89,11 +82,16 @@ err_t wifi_init(){
 
 
 int main(){
+    Servo_t arm;
+    Servo_t base;
+    Servo_t rotor;
+    Servo_t hand;
+
     stdio_init_all();
-    all_servo_Init();
+    all_servo_Init(&arm, &base, &rotor, &hand);
     OC_init();
     
-    if (wifi_init() != ERR_OK){
+    if (wifi_init(&arm, &base, &rotor, &hand) != ERR_OK){
         cyw43_arch_deinit();
         return -1;
     }
@@ -115,9 +113,11 @@ int main(){
         sleep_ms(10);
 
         oc_check_value = OC_check();
-        if(oc_check_value & OC_ARM_NUM)   OC_run_timer(&arm, OC_ARM_NUM); else if (arm.start) arm.backUp = arm.current_angle;
-        if(oc_check_value & OC_BASE_NUM)  OC_run_timer(&base, OC_BASE_NUM); else if (base.start) base.backUp = base.current_angle;
+        if(oc_check_value & OC_ARM_NUM)   OC_run_timer(&arm, OC_ARM_NUM);     else if (arm.start)   arm.backUp   = arm.current_angle;
+        if(oc_check_value & OC_BASE_NUM)  OC_run_timer(&base, OC_BASE_NUM);   else if (base.start)  base.backUp  = base.current_angle;
         if(oc_check_value & OC_ROTOR_NUM) OC_run_timer(&rotor, OC_ROTOR_NUM); else if (rotor.start) rotor.backUp = rotor.current_angle;
+        
+        if(oc_check_value & OC_HAND_NUM) hand.angle = hand.backUp; else if (hand.start) hand.backUp = hand.current_angle;
     }
 
     return 0;
