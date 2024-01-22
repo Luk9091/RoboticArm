@@ -10,4 +10,5 @@ build
 *.synctex.gz
 *.fls
 
+Wideo/
 *.pdf
