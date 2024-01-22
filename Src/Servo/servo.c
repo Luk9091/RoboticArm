@@ -43,6 +43,9 @@ void Servo_init(Servo_t *servo){
 
 
 void Servo_setAngle(Servo_t *servo, uint angle){
+    // if (angle > servo->max){angle = servo->max;} else
+    // if (angle < servo->min){angle = servo->min;}
+
     uint16_t level = LEVEL_MIN + angle * ((LEVEL_MAX - LEVEL_MIN) / 180);
     servo->current_angle = angle;
     pwm_set_gpio_level(servo->GPIO, level);
@@ -82,6 +85,7 @@ void Servo_goto(Servo_t *servo){
 void Servo_start(Servo_t *servo){
     servo->start = true;
     servo->angle = servo->backUp;
+    Servo_setAngle(servo, servo->angle);
     uint slice = pwm_gpio_to_slice_num(servo->GPIO);
     pwm_set_enabled(slice, true);
 }

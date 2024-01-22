@@ -12,13 +12,13 @@
 
 #define OC_ARM_NUM       2
 #define OC_BASE_NUM      1
-#define OC_ROTOR_NUM     8
-#define OC_HAND_NUM      4
+#define OC_ROTOR_NUM     4
+#define OC_HAND_NUM      8
 
 #define OC_ARM_PIN      11
 #define OC_BASE_PIN     10
-#define OC_ROTOR_PIN    13
-#define OC_HAND_PIN     12
+#define OC_ROTOR_PIN    12
+#define OC_HAND_PIN     13
 
 
 void OC_init();

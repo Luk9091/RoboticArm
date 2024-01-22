@@ -40,7 +40,6 @@ int64_t OC_timer_execute(alarm_id_t id, void *args){
 void OC_run_timer(Servo_t *servo, uint num){
     if (!(set_timer & num)){
         struct OC_Servo *oc_servo = malloc(sizeof(struct OC_Servo));
-        // servo->backUp = servo->current_angle;
         oc_servo->servo = servo;
         oc_servo->num = num;
         add_alarm_in_ms(2000, OC_timer_execute, oc_servo, false);
