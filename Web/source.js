@@ -380,7 +380,7 @@ window.onload = function(){
             armValue.style.display = 'none';
             armRes.style.display = "inline";
         }
-        if(OC.value & 8){
+        if(OC.value & 4){
             rotorSlider.outerHTML = OverCurrent.outerHTML;
             rotorValue.style.display = 'none';
             rotorRes.style.display = "inline";
@@ -421,7 +421,7 @@ function reload(){
 
 armRes.onclick = function(){window.location.href   = "/res?2"}
 baseRes.onclick = function(){window.location.href  = "/res?1"}
-rotorRes.onclick = function(){window.location.href = "/res?8"}
+rotorRes.onclick = function(){window.location.href = "/res?4"}
 
 function changeVal_arm(value){
     value = parseInt(value);
