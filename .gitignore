@@ -12,4 +12,7 @@ build
 
 Wideo/
 *.pdf
+
 !Schematic/RoboticArm.pdf
+*.zip
+*.cache
