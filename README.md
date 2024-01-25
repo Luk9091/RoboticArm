@@ -5,7 +5,7 @@ Poniższy projekt przedstawia roboramie, wykonane w ramach projektu zaliczeniowe
 Tematem projektu jest robotyczne ramie, z możliwością sterowania po HTTP,
 Ramie, zostało wydrukowane z projektu: *<p>https://www.thingiverse.com/thing:1015238</p>*
 
-<img src="./Docs/Img/myArm.jpg">
+<img src="./Docs/Img/myArm.jpg" width = 400px>
 
 Sterowaniem zajmuje się mikroprocesor RP2040 z modułem Wi-Fi cyw43.
 A projekt rozłożony jest między dwa języki *C* i *JavaScript*.
