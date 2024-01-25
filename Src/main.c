@@ -27,7 +27,7 @@
 void all_servo_Init(Servo_t *arm, Servo_t *base, Servo_t *rotor, Servo_t *hand){
     static bool is_init = false;
     if (is_init){
-        printf("Serve are init\n");
+        printf("Servo are init\n");
         return;
     }
     is_init = true;
