@@ -1,3 +1,5 @@
+<span class='pageNumber'></span>
+<span class='totalPages'></span>
 # Robotic Arm
 Poniższy projekt przedstawia roboramie, wykonane w ramach projektu zaliczeniowego na przedmiot `Systemy mikroprocesorowe II`.
 
@@ -14,7 +16,7 @@ A projekt rozłożony jest między dwa języki *C* i *JavaScript*.
 
 
 
-## Build
+# Build
 !!! ***Wszystkie operację należy wykonywać w pliku `Src`*** !!!
 
 Aby zbudować projekt należy:
@@ -80,11 +82,50 @@ W schemacie układu można wyróżnić 4 główne bloki
     - 4 wzmacniacze operacyjne, mierzące spadek napięcia na rezystancji pomiarowej,
     - 4 komparatory, które porównują napięcie z wzmacniaczy z napięciem referencyjnym.
 
-### Działanie
+## Działanie
 Użytkownik przez przeglądarkę łączy się z serwerem WWW stawianym przez malinkę.
 Pozwala to na sterowanie każdym z silników, poprzez zadanie dozwolonego kąta.
 W momencie, gdy któreś serwo nie może wykonać zadanego ruchu - zaczyna pobierać większy prąd, uruchamiany jest kilku sekundowy alarm.
 Jeśli po zakończeniu alarmu serwo nadal pobiera duży prąd, silnik zostaje wyłączony* - a układ czeka na ponowne uruchomienie przez użytkownika.
 Informacja o przeciążeniu zostaje oczywiście wysłane do użytkownika, poprzez stronę WWW.
+<img src="./Docs/Img/OverCurrent.png">
 
 *chwytak, nie zostaje wyłączony a jego zgięcie ograniczone jest do kąta, którego osiągnięcie jeszcze nie przekraczało wartości progowej.
+
+
+
+
+
+# Pętle programu
+```mermaid
+stateDiagram
+
+    [*]                      --> GlobalInit
+    GlobalInit               --> StartHTTP
+    StartHTTP                --> InBuildLED_ON
+    InBuildLED_ON            --> servoMoveTo(servo.angle)
+    servoMoveTo(servo.angle) --> run_OverCurrentTimer:if (servo.OverCurrent)
+    run_OverCurrentTimer     --> servoMoveTo(servo.angle)
+    servoMoveTo(servo.angle) --> servoMoveTo(servo.angle):else
+
+    state run_OverCurrentTimer{
+        [*]                      --> checkOverCurrent:wait
+        checkOverCurrent         --> stopServo:if (overCurrent)
+        stopServo                --> [*]
+        checkOverCurrent         --> [*]
+    }
+
+    UserRefreshHTTP          --> sendWebPage
+    UserSendDataByHTTP       --> servo.angle:storeNewAngel
+```
+
+
+# Podsumowanie
+Projekt, jest udaną próbą stworzenia ramienia robota, pokazującym, że odpowiednia kontrola nawet tanich serwomechanizmów, pozwala na osiągnięcie jedno stopniowej precyzji.
+Pomiar prądu w celu zabezpieczenia układu przed uszkodzeniem okazał się także strzałem w dziesiątkę. 
+Ponieważ pozwala nie tylko odciążyć zasoby wbudowane w kontroler, ale także przy odpowiedniej regulacji ustroju pomiarowego możne określać czy silniki pracują poprawnie.
+Przykładowo, można sprawdzić czy silnik jest podłączony - w trakcie normalnej pracy silniki zawsze pobierają minimum 10mA.
+
+### Nie udało się zrealizować
+Ostatecznie nie udało się odczytywać na bieżąco kata ustawionego na potencjometrze, ze względu na za duże wachania odczytanych wartości.
+Zastosowanie znacznego uśredniania nie wchodzi w grę w momencie gdy układ ma pracować z szybkościami 100 deg/s.
